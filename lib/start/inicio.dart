@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'package:burrito_driver_app/ending/final.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,7 +23,7 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
     super.dispose();
   }
 
-  // Función para realizar las solicitudes periódicamente
+  // Function to start periodic requests
   void _startRequests() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (!_isRunning) {
@@ -35,20 +34,18 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
     });
   }
 
-  // Función para detener las solicitudes periódicas
+  // Function to stop periodic requests
   void _stopRequests() {
     _timer?.cancel();
     setState(() {
-      // _mensaje = 'Solicitudes detenidas';
       _isRunning = false;
     });
   }
 
-  // Función para hacer la solicitud POST
+  // Function to make the POST request
   Future<void> _hacerSolicitudes() async {
     Position? position;
     try {
-      // Obtener la ubicación actual
       position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
@@ -57,20 +54,15 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
     }
 
     if (position != null) {
-      final urlPost = Uri.parse('http://elenadb.live:6969/give-position');
-      // final urlPost = Uri.parse(
-      //   'https://burrito-server.shuttleapp.rs/give-position',
-      // );
+      final urlPost = Uri.parse('http://elenadb.live:6969/status');
 
       try {
-        // Datos para enviar en la solicitud POST
         final postData = {
           'lt': position.latitude,
           'lg': position.longitude,
           'sts': _selectedStatus,
         };
 
-        // Realizar la solicitud POST
         final response = await http.post(
           urlPost,
           headers: {
@@ -80,15 +72,7 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          // final responseData = jsonDecode(response.body);
-          // print('POST request data: $responseData');
-
-          setState(() {
-            // _mensaje = '¡Solicitud POST exitosa!';
-          });
-          // show snackbar of success
           if (context.mounted) {
-            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Solicitud enviada correctamente'),
@@ -99,16 +83,9 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
           }
         } else {
           print('Error en POST request: ${response.statusCode}');
-          setState(() {
-            // _mensaje = 'Error en POST request';
-          });
         }
       } catch (e, st) {
         print('Excepción atrapada: $e $st');
-        setState(() {
-          // _mensaje = 'Ocurrió un error';
-        });
-
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -119,10 +96,6 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
           );
         }
       }
-    } else {
-      setState(() {
-        // _mensaje = 'No se pudo obtener la ubicación';
-      });
     }
   }
 
@@ -132,14 +105,20 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
       MaterialPageRoute(
         builder: (context) => StatusButton(
           onStop: _stopRequests,
-          currentStatus: _selectedStatus, // Pasar el estado actual
+          currentStatus: _selectedStatus,
+          onStatusChanged: (newStatus) async {
+            setState(() {
+              _selectedStatus = newStatus;
+            });
+            await _hacerSolicitudes(); // Realiza la solicitud POST inmediatamente
+          },
         ),
       ),
     );
 
     if (result != null) {
       setState(() {
-        _selectedStatus = result; // Actualizar el estado seleccionado
+        _selectedStatus = result;
         _isRunning = false;
       });
     }
@@ -147,9 +126,13 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenHeight = screenSize.height;
+    final screenWidth = screenSize.width;
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -164,21 +147,19 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
                     fontFamily: 'Koulen',
                   ),
                 ),
-                const SizedBox(
-                    height: 90), // Espacio entre el título y la imagen
+                SizedBox(height: screenHeight * 0.1),
                 Image.asset(
-                  'assets/img/real_burrito_icon.png', // Ruta de tu imagen
-                  width: 340, // Ancho de la imagen
-                  height: 340, // Alto de la imagen
+                  'assets/img/real_burrito_icon.png',
+                  width: screenWidth * 0.8,
+                  height: screenWidth * 0.8,
                 ),
-                const SizedBox(
-                    height: 130), // Espacio entre la imagen y el boton
+                SizedBox(height: screenHeight * 0.1),
               ],
             ),
             Center(
               child: SizedBox(
-                width: 350,
-                height: 60,
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.08,
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -191,17 +172,17 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
                     foregroundColor: Colors.white,
                     backgroundColor: const Color.fromARGB(255, 37, 37, 37),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Iniciar Recorrido',
-                    style: TextStyle(fontSize: 25),
+                    style: TextStyle(fontSize: screenHeight * 0.03),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: screenHeight * 0.01),
           ],
         ),
       ),
