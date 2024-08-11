@@ -5,14 +5,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-class BotonSolicitudes extends StatefulWidget {
-  const BotonSolicitudes({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  BotonSolicitudesState createState() => BotonSolicitudesState();
+  HomePageState createState() => HomePageState();
 }
 
-class BotonSolicitudesState extends State<BotonSolicitudes> {
+class HomePageState extends State<HomePage> {
   Timer? _timer;
   bool _isRunning = false;
   int _selectedStatus = 0;

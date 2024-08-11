@@ -14,9 +14,7 @@ class DriverApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Burrito Driver App',
       home: Scaffold(
-        body: Center(
-          child: BotonSolicitudes(),
-        ),
+        body: HomePage(),
       ),
     );
   }
