@@ -67,6 +67,7 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
           urlPost,
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'te quiero burrito',
           },
           body: jsonEncode(postData),
         );
