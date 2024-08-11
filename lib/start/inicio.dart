@@ -50,7 +50,7 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
         desiredAccuracy: LocationAccuracy.best,
       );
     } catch (e) {
-      print('Error al obtener la ubicación: $e');
+      debugPrint('Error al obtener la ubicación: $e');
     }
 
     if (position != null) {
@@ -83,10 +83,10 @@ class BotonSolicitudesState extends State<BotonSolicitudes> {
             );
           }
         } else {
-          print('Error en POST request: ${response.statusCode}');
+          debugPrint('Error en POST request: ${response.statusCode}');
         }
       } catch (e, st) {
-        print('Excepción atrapada: $e $st');
+        debugPrint('Excepción atrapada: $e $st');
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
