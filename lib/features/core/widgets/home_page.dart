@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:burrito_driver_app/ending/final.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:burrito_driver_app/features/core/requests.dart';
+import 'package:burrito_driver_app/features/status/change_status_button.dart';
 import 'package:burrito_driver_app/features/status/widgets/status_badge.dart';
 import 'package:burrito_driver_app/features/status/data/entities/service_status.dart';
 import 'package:burrito_driver_app/features/status/data/entities/server_response.dart';
