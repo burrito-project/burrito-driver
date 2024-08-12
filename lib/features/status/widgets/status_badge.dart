@@ -15,9 +15,12 @@ class BurritoStatusBadge extends StatelessWidget {
     switch (status) {
       case BusServiceStatus.working:
         return Container(
-          color: Colors.red,
           height: badgeHeight,
           width: badgeWidth,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(4),
+          ),
           child: const Center(
             child: Text(
               'LIVE',
@@ -31,9 +34,12 @@ class BurritoStatusBadge extends StatelessWidget {
         );
       case BusServiceStatus.loading:
         return Container(
-          color: grayColor,
           height: badgeHeight,
           width: badgeWidth,
+          decoration: BoxDecoration(
+            color: grayColor,
+            borderRadius: BorderRadius.circular(4),
+          ),
           child: const SizedBox(
             height: 12,
             width: 12,
@@ -46,9 +52,12 @@ class BurritoStatusBadge extends StatelessWidget {
         );
       case BusServiceStatus.off:
         return Container(
-          color: grayColor,
           height: badgeHeight,
           width: badgeWidth,
+          decoration: BoxDecoration(
+            color: grayColor,
+            borderRadius: BorderRadius.circular(4),
+          ),
           child: const Center(
             child: Text(
               'APAGADO',
