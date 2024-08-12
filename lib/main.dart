@@ -12,9 +12,9 @@ class DriverApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Burrito Driver App',
+      title: 'Burrito Driver',
       theme: ThemeData(
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
         primarySwatch: Colors.blue,
         hintColor: Colors.blueAccent,
         fontFamily: 'Roboto',

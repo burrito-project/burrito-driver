@@ -1,6 +1,6 @@
 {
-    "name": "burrito_cheat",
-    "short_name": "burrito_cheat",
+    "name": "burrito_driver",
+    "short_name": "burrito_driver",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

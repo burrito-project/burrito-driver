@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "burrito_cheat" "\0"
+            VALUE "CompanyName", "pe.edu.unmsm" "\0"
+            VALUE "FileDescription", "burrito_driver" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "burrito_cheat" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "burrito_cheat.exe" "\0"
-            VALUE "ProductName", "burrito_cheat" "\0"
+            VALUE "InternalName", "burrito_driver" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 pe.edu.unmsm. All rights reserved." "\0"
+            VALUE "OriginalFilename", "burrito_driver.exe" "\0"
+            VALUE "ProductName", "burrito_driver" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
