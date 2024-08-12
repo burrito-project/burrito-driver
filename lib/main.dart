@@ -10,11 +10,21 @@ class DriverApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Burrito Driver App',
-      home: Scaffold(
-        body: HomePage(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
+        hintColor: Colors.blueAccent,
+        fontFamily: 'Roboto',
+      ),
+      home: const Scaffold(
+        primary: true,
+        backgroundColor: Color(0xffc6d1e1),
+        body: SafeArea(
+          child: HomePage(),
+        ),
       ),
     );
   }

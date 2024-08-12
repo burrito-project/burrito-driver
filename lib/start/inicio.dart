@@ -1,9 +1,10 @@
-import 'package:burrito_driver_app/ending/final.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
+import 'package:burrito_driver_app/features/core/requests.dart';
+import 'package:burrito_driver_app/features/status/widgets/status_badge.dart';
+import 'package:burrito_driver_app/features/status/data/entities/service_status.dart';
+import 'package:burrito_driver_app/features/status/data/entities/server_response.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,81 +14,54 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  Timer? _timer;
-  bool _isRunning = false;
-  int _selectedStatus = 0;
+  BusServiceStatus serviceStatus = BusServiceStatus.off;
+  late Stream<ServerResponse?> responsesStream;
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  void initState() {
+    super.initState();
 
-  // Function to start periodic requests
-  void _startRequests() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      if (!_isRunning) {
-        timer.cancel();
-      } else {
-        await _hacerSolicitudes();
-      }
-    });
-  }
+    responsesStream = Geolocator.getPositionStream(
+      locationSettings: AndroidSettings(
+        intervalDuration: const Duration(seconds: 1),
+        accuracy: LocationAccuracy.high,
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText: 'Enviando ubicación actual de la ruta del burrito',
+          notificationTitle: 'Burrito funcionando',
+          enableWakeLock: true,
+          notificationIcon: AndroidResource(name: 'mipmap/ic_launcher'),
+          notificationChannelName: 'Tracking en segundo plano',
+        ),
+      ),
+    ).asyncMap<ServerResponse?>((pos) async {
+      if (!serviceStatus.locatable) return null;
 
-  // Function to stop periodic requests
-  void _stopRequests() {
-    _timer?.cancel();
-    setState(() {
-      _isRunning = false;
-    });
-  }
-
-  // Function to make the POST request
-  Future<void> _hacerSolicitudes() async {
-    Position? position;
-    try {
-      position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
-      );
-    } catch (e) {
-      debugPrint('Error al obtener la ubicación: $e');
-    }
-
-    if (position != null) {
-      final urlPost = Uri.parse('http://elenadb.live:6969/status');
+      print('\n');
+      print(pos.altitude);
+      print(pos.latitude);
+      print(pos.longitude);
+      print(pos.speed);
 
       try {
-        final postData = {
-          'lt': position.latitude,
-          'lg': position.longitude,
-          'sts': _selectedStatus,
-        };
-
-        final response = await http.post(
-          urlPost,
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'te quiero burrito',
-          },
-          body: jsonEncode(postData),
+        final response = await sendBusStatus(
+          latitude: pos.latitude,
+          longitude: pos.longitude,
+          status: serviceStatus,
         );
 
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Solicitud enviada correctamente'),
-                backgroundColor: Colors.green,
-                duration: Duration(milliseconds: 500),
-              ),
-            );
-          }
-        } else {
-          debugPrint('Error en POST request: ${response.statusCode}');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Solicitud enviada correctamente'),
+              backgroundColor: Colors.green,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         }
+        return ServerResponse(ms: response.ms);
       } catch (e, st) {
         debugPrint('Excepción atrapada: $e $st');
-        if (context.mounted) {
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error en la solicitud: $e'),
@@ -96,97 +70,106 @@ class HomePageState extends State<HomePage> {
             ),
           );
         }
+        rethrow;
       }
-    }
+    });
   }
 
-  void _navigateToStatusButton() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StatusButton(
-          onStop: _stopRequests,
-          currentStatus: _selectedStatus,
-          onStatusChanged: (newStatus) async {
-            setState(() {
-              _selectedStatus = newStatus;
-            });
-            await _hacerSolicitudes(); // Realiza la solicitud POST inmediatamente
-          },
-        ),
-      ),
-    );
-
-    if (result != null) {
-      setState(() {
-        _selectedStatus = result;
-        _isRunning = false;
-      });
-    }
+  @override
+  void dispose() {
+    responsesStream.drain();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final screenHeight = screenSize.height;
-    final screenWidth = screenSize.width;
-
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.04),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Burrito Driver App',
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Koulen',
-                  ),
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/img/burrito_stationary.png',
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 16, 16, 16),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
-                SizedBox(height: screenHeight * 0.1),
-                Image.asset(
-                  'assets/img/real_burrito_icon.png',
-                  width: screenWidth * 0.8,
-                  height: screenWidth * 0.8,
-                ),
-                SizedBox(height: screenHeight * 0.1),
-              ],
-            ),
-            Center(
-              child: SizedBox(
-                width: screenWidth * 0.9,
-                height: screenHeight * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isRunning = true;
-                      _startRequests();
-                    });
-                    _navigateToStatusButton();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(255, 37, 37, 37),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    BurritoStatusBadge(status: serviceStatus),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Burrito conductor',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'Iniciar Recorrido',
-                    style: TextStyle(fontSize: screenHeight * 0.03),
+                    StreamBuilder(
+                      stream: responsesStream,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const SizedBox.shrink();
+                        }
+                        final response = snapshot.data as ServerResponse;
+
+                        return Text(
+                          'Tiempo transcurrido: ${response.ms} ms',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                  ],
+                ),
+              ),
+            ),
+            const Expanded(child: SizedBox.expand()),
+            Container(
+              color: const Color.fromARGB(255, 16, 16, 16),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 32,
+                  horizontal: 16,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 72,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        serviceStatus = BusServiceStatus.working;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF262F31),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Iniciar Recorrido',
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: screenHeight * 0.01),
           ],
         ),
-      ),
+      ],
     );
   }
 }
