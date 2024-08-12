@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:burrito_driver_app/ending/final.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:burrito_driver_app/features/core/requests.dart';
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  bool isJourneyStarted = false;
   BusServiceStatus serviceStatus = BusServiceStatus.off;
   late Stream<ServerResponse?> responsesStream;
 
@@ -81,6 +83,26 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void startJourney() {
+    setState(() {
+      serviceStatus = BusServiceStatus.working;
+      isJourneyStarted = true;
+    });
+  }
+
+  void stopRequests() {
+    setState(() {
+      serviceStatus = BusServiceStatus.off;
+      isJourneyStarted = false;
+    });
+  }
+
+  void onStatusChanged(int newStatus) {
+    setState(() {
+      serviceStatus = BusServiceStatus.values[newStatus];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -146,24 +168,26 @@ class HomePageState extends State<HomePage> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 72,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        serviceStatus = BusServiceStatus.working;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF262F31),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Iniciar Recorrido',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ),
+                  child: isJourneyStarted
+                      ? StatusButton(
+                          onStop: stopRequests,
+                          currentStatus: serviceStatus.index,
+                          onStatusChanged: onStatusChanged,
+                        )
+                      : ElevatedButton(
+                          onPressed: startJourney,
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xFF262F31),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Iniciar Recorrido',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
                 ),
               ),
             ),
