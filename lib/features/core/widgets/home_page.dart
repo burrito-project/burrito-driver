@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:burrito_driver_app/features/core/requests.dart';
+import 'package:burrito_driver_app/features/core/utils/permissions.dart';
 import 'package:burrito_driver_app/features/status/change_status_button.dart';
 import 'package:burrito_driver_app/features/status/widgets/status_badge.dart';
 import 'package:burrito_driver_app/features/status/data/entities/service_status.dart';
@@ -25,7 +26,10 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void startJourney() {
+  void startJourney() async {
+    final result = await manageNeededPermissions(context);
+    if (!result) return;
+
     setState(() {
       serviceStatus = BusServiceStatus.working;
     });
