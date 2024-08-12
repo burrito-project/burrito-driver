@@ -1,5 +1,5 @@
-import 'package:burrito_driver_app/start/inicio.dart';
 import 'package:flutter/material.dart';
+import 'package:burrito_driver_app/features/core/widgets/home_page.dart';
 
 void main() {
   runApp(const DriverApp());
