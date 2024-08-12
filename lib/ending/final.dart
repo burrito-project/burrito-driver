@@ -39,51 +39,33 @@ class StatusButtonState extends State<StatusButton> {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () {
-              showDialog(
+            onPressed: () async {
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonOffset = button.localToGlobal(Offset.zero);
+              final Size buttonSize = button.size;
+
+              final selectedStatus = await showMenu<int>(
                 context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Selecciona el Estado'),
-                    content: DropdownButton<int>(
-                      value: _selectedStatus,
-                      items: _statusDescriptions.entries.map((entry) {
-                        return DropdownMenuItem<int>(
-                          value: entry.key,
-                          child: Text(entry.value),
-                        );
-                      }).toList(),
-                      onChanged: (int? newValue) {
-                        setState(() {
-                          _selectedStatus = newValue!;
-                        });
-                        widget.onStatusChanged(_selectedStatus);
-                      },
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Aceptar'),
-                        onPressed: () {
-                          Navigator.of(context).pop(_selectedStatus);
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                position: RelativeRect.fromLTRB(
+                  buttonOffset.dx,
+                  buttonOffset.dy - 200,
+                  buttonOffset.dx + buttonSize.width,
+                  buttonOffset.dy,
+                ),
+                items: _statusDescriptions.entries.map((entry) {
+                  return PopupMenuItem<int>(
+                    value: entry.key,
+                    child: Text(entry.value),
                   );
-                },
-              ).then((selectedStatus) {
-                if (selectedStatus != null) {
-                  setState(() {
-                    _selectedStatus = selectedStatus;
-                  });
+                }).toList(),
+              );
+
+              if (selectedStatus != null) {
+                setState(() {
+                  _selectedStatus = selectedStatus;
                   widget.onStatusChanged(_selectedStatus);
-                }
-              });
+                });
+              }
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
