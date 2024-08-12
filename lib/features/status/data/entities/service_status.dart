@@ -27,9 +27,20 @@ enum BusServiceStatus {
         return 'Accidente';
       case off:
         return 'Error';
-      default:
-        return 'unknown';
+      case BusServiceStatus.loading:
+        return 'Cargando';
+      case BusServiceStatus.unknown:
+        return 'Desconocido';
     }
+  }
+
+  static List<BusServiceStatus> selectable() {
+    return [
+      working,
+      outOfService,
+      atRest,
+      accident,
+    ];
   }
 
   bool get locatable {

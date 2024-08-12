@@ -1,9 +1,10 @@
+import 'package:burrito_driver_app/features/status/data/entities/service_status.dart';
 import 'package:flutter/material.dart';
 
 class StatusButton extends StatefulWidget {
   final VoidCallback onStop;
-  final int currentStatus;
-  final Function(int) onStatusChanged;
+  final BusServiceStatus currentStatus;
+  final Function(BusServiceStatus newStatus) onStatusChanged;
 
   const StatusButton({
     super.key,
@@ -17,15 +18,7 @@ class StatusButton extends StatefulWidget {
 }
 
 class StatusButtonState extends State<StatusButton> {
-  late int _selectedStatus;
-
-  // Mapa de estados con sus descripciones
-  final Map<int, String> _statusDescriptions = {
-    0: 'En ruta',
-    1: 'Fuera de servicio',
-    2: 'En descanso',
-    3: 'Accidente',
-  };
+  late BusServiceStatus _selectedStatus;
 
   @override
   void initState() {
@@ -44,7 +37,7 @@ class StatusButtonState extends State<StatusButton> {
               final Offset buttonOffset = button.localToGlobal(Offset.zero);
               final Size buttonSize = button.size;
 
-              final selectedStatus = await showMenu<int>(
+              final selectedStatus = await showMenu<BusServiceStatus>(
                 context: context,
                 position: RelativeRect.fromLTRB(
                   buttonOffset.dx,
@@ -52,10 +45,10 @@ class StatusButtonState extends State<StatusButton> {
                   buttonOffset.dx + buttonSize.width,
                   buttonOffset.dy,
                 ),
-                items: _statusDescriptions.entries.map((entry) {
-                  return PopupMenuItem<int>(
-                    value: entry.key,
-                    child: Text(entry.value),
+                items: BusServiceStatus.selectable().map((sts) {
+                  return PopupMenuItem<BusServiceStatus>(
+                    value: sts,
+                    child: Text(sts.displayName),
                   );
                 }).toList(),
               );
@@ -78,7 +71,7 @@ class StatusButtonState extends State<StatusButton> {
               ),
             ),
             child: Text(
-              _statusDescriptions[_selectedStatus] ?? 'Estado Desconocido',
+              _selectedStatus.displayName,
               style: const TextStyle(
                 fontSize: 24,
               ),

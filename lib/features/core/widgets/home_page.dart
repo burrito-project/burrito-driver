@@ -97,9 +97,9 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  void onStatusChanged(int newStatus) {
+  void onStatusChanged(BusServiceStatus newStatus) {
     setState(() {
-      serviceStatus = BusServiceStatus.values[newStatus];
+      serviceStatus = newStatus;
     });
   }
 
@@ -171,7 +171,7 @@ class HomePageState extends State<HomePage> {
                   child: isJourneyStarted
                       ? StatusButton(
                           onStop: stopRequests,
-                          currentStatus: serviceStatus.index,
+                          currentStatus: serviceStatus,
                           onStatusChanged: onStatusChanged,
                         )
                       : ElevatedButton(
