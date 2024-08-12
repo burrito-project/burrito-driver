@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:burrito_driver_app/features/core/requests.dart';
 import 'package:burrito_driver_app/features/status/change_status_button.dart';
@@ -15,13 +16,19 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  bool isJourneyStarted = false;
   BusServiceStatus serviceStatus = BusServiceStatus.off;
-  late Stream<ServerResponse?> responsesStream;
+  Stream<ServerResponse?> responsesStream = const Stream.empty();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    responsesStream.drain();
+    super.dispose();
+  }
+
+  void startJourney() {
+    setState(() {
+      serviceStatus = BusServiceStatus.working;
+    });
 
     responsesStream = Geolocator.getPositionStream(
       locationSettings: AndroidSettings(
@@ -36,13 +43,15 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     ).asyncMap<ServerResponse?>((pos) async {
-      if (!serviceStatus.locatable) return null;
+      if (serviceStatus.shoudlNotMakeRequests) return null;
 
-      print('\n');
-      print(pos.altitude);
-      print(pos.latitude);
-      print(pos.longitude);
-      print(pos.speed);
+      if (kDebugMode) {
+        print('\n');
+        print(pos.altitude);
+        print(pos.latitude);
+        print(pos.longitude);
+        print(pos.speed);
+      }
 
       try {
         final response = await sendBusStatus(
@@ -77,23 +86,11 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  @override
-  void dispose() {
-    responsesStream.drain();
-    super.dispose();
-  }
-
-  void startJourney() {
-    setState(() {
-      serviceStatus = BusServiceStatus.working;
-      isJourneyStarted = true;
-    });
-  }
-
   void stopRequests() {
+    responsesStream = const Stream.empty();
+
     setState(() {
       serviceStatus = BusServiceStatus.off;
-      isJourneyStarted = false;
     });
   }
 
@@ -168,7 +165,7 @@ class HomePageState extends State<HomePage> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 72,
-                  child: isJourneyStarted
+                  child: serviceStatus.isStarted
                       ? ChangeStatusButton(
                           onStop: stopRequests,
                           currentStatus: serviceStatus,

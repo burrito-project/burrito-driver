@@ -46,4 +46,16 @@ enum BusServiceStatus {
   bool get locatable {
     return this == working || this == accident;
   }
+
+  bool get isStarted {
+    return this != unknown && this != loading && this != off;
+  }
+
+  bool get shoudlNotMakeRequests {
+    return this == off || this == unknown || this == loading;
+  }
+
+  bool get shouldNotSendLocation {
+    return shoudlNotMakeRequests || this == atRest || this == outOfService;
+  }
 }
