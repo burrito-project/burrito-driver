@@ -1,12 +1,12 @@
 import 'package:burrito_driver_app/features/status/data/entities/service_status.dart';
 import 'package:flutter/material.dart';
 
-class StatusButton extends StatefulWidget {
+class ChangeStatusButton extends StatefulWidget {
   final VoidCallback onStop;
   final BusServiceStatus currentStatus;
   final Function(BusServiceStatus newStatus) onStatusChanged;
 
-  const StatusButton({
+  const ChangeStatusButton({
     super.key,
     required this.onStop,
     required this.currentStatus,
@@ -14,10 +14,10 @@ class StatusButton extends StatefulWidget {
   });
 
   @override
-  StatusButtonState createState() => StatusButtonState();
+  ChangeStatusButtonState createState() => ChangeStatusButtonState();
 }
 
-class StatusButtonState extends State<StatusButton> {
+class ChangeStatusButtonState extends State<ChangeStatusButton> {
   late BusServiceStatus _selectedStatus;
 
   @override

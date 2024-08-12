@@ -169,7 +169,7 @@ class HomePageState extends State<HomePage> {
                   width: double.infinity,
                   height: 72,
                   child: isJourneyStarted
-                      ? StatusButton(
+                      ? ChangeStatusButton(
                           onStop: stopRequests,
                           currentStatus: serviceStatus,
                           onStatusChanged: onStatusChanged,
