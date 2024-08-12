@@ -75,13 +75,13 @@ class HomePageState extends State<HomePage> {
         }
         return ServerResponse(ms: response.ms);
       } catch (e, st) {
-        debugPrint('Excepción atrapada: $e $st');
+        debugPrint('Request error: $e $st');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error en la solicitud: $e'),
               backgroundColor: Colors.red,
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
