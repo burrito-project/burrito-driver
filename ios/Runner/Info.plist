@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Burrito driver necesita mandar tu ubicación en el background</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Burrito driver está usando tu ubicación</string>
+	<key>UIBackgroundModes</key>
+	<array>
+	<string>location</string>
+	</array>
 </dict>
 </plist>
