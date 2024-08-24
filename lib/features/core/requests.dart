@@ -5,7 +5,7 @@ import 'package:burrito_driver_app/features/status/data/entities/service_status.
 
 final dio = Dio(
   BaseOptions(
-    baseUrl: 'http://elenadb.live:6969',
+    baseUrl: 'api.contigosanmarcos.com/status',
     connectTimeout: const Duration(seconds: 10),
     sendTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
