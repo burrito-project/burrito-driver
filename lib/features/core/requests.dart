@@ -5,7 +5,8 @@ import 'package:burrito_driver_app/features/status/data/entities/service_status.
 
 final dio = Dio(
   BaseOptions(
-    baseUrl: 'api.contigosanmarcos.com/status',
+    // baseUrl: 'http://elenadb.live:6969',
+    baseUrl: 'https://api.contigosanmarcos.com',
     connectTimeout: const Duration(seconds: 10),
     sendTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
@@ -21,7 +22,7 @@ Future<ServerResponse> sendBusStatus({
     final startTime = DateTime.now();
 
     await dio.post(
-      '/status',
+      '/driver',
       data: {
         'lt': latitude,
         'lg': longitude,
@@ -30,6 +31,7 @@ Future<ServerResponse> sendBusStatus({
       options: Options(
         headers: {
           'Authorization': 'te quiero burrito',
+          'x-bus-id': 'burrito-001',
         },
       ),
     );

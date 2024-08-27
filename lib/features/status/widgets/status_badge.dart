@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class BurritoStatusBadge extends StatelessWidget {
   final BusServiceStatus status;
-  static const badgeWidth = 90.0;
-  static const badgeHeight = 24.0;
-  static const fontSize = 14.0;
+  static const badgeWidth = 100.0;
+  static const badgeHeight = 32.0;
+  static const fontSize = 16.0;
   static const grayColor = Color.fromARGB(255, 110, 110, 110);
 
   const BurritoStatusBadge({super.key, required this.status});

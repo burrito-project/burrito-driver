@@ -132,7 +132,7 @@ class HomePageState extends State<HomePage> {
                       'Burrito conductor',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         color: Colors.white,
                       ),
                     ),
@@ -186,7 +186,7 @@ class HomePageState extends State<HomePage> {
                           ),
                           child: const Text(
                             'Iniciar Recorrido',
-                            style: TextStyle(fontSize: 24),
+                            style: TextStyle(fontSize: 26),
                           ),
                         ),
                 ),
