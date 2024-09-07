@@ -19,7 +19,7 @@ dependencies:
   permission_handler: ^11.3.1
 
 flutter_launcher_icons:
-  android: true
+  android: "launcher_icon"
   ios: true
   image_path: "assets/icons/app_icon.png"
   adaptive_icon_background: "assets/icons/app_icon.png"
