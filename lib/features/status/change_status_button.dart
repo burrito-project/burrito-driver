@@ -62,7 +62,9 @@ class ChangeStatusButtonState extends State<ChangeStatusButton> {
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: const Color(0xFF262F31),
+              backgroundColor: _selectedStatus.locatable
+                  ? Colors.green
+                  : const Color(0xFF262F31),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -81,11 +83,14 @@ class ChangeStatusButtonState extends State<ChangeStatusButton> {
         const SizedBox(width: 16),
         ElevatedButton(
           onPressed: () {
+            ScaffoldMessenger.of(context).clearSnackBars();
             widget.onStop();
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: const Color(0xFF262F31),
+            backgroundColor: _selectedStatus.locatable
+                ? Colors.red
+                : const Color(0xFF262F31),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

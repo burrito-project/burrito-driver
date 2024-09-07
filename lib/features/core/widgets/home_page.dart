@@ -65,9 +65,10 @@ class HomePageState extends State<HomePage> {
         );
 
         if (mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Solicitud enviada correctamente'),
+              content: Text('Posición actualizada'),
               backgroundColor: Colors.green,
               duration: Duration(milliseconds: 500),
             ),
@@ -75,8 +76,10 @@ class HomePageState extends State<HomePage> {
         }
         return ServerResponse(ms: response.ms);
       } catch (e, st) {
+        // TODO: enviar logs al servidor
         debugPrint('Request error: $e $st');
         if (mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error en la solicitud: $e'),
@@ -165,7 +168,7 @@ class HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 32,
                   horizontal: 16,
-                ),
+                ).copyWith(bottom: 52),
                 child: SizedBox(
                   width: double.infinity,
                   height: 72,
@@ -186,7 +189,10 @@ class HomePageState extends State<HomePage> {
                           ),
                           child: const Text(
                             'Iniciar Recorrido',
-                            style: TextStyle(fontSize: 26),
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                 ),
