@@ -5,7 +5,6 @@ import 'package:burrito_driver_app/features/status/data/entities/service_status.
 
 final dio = Dio(
   BaseOptions(
-    // baseUrl: 'http://elenadb.live:6969',
     baseUrl: 'https://api.contigosanmarcos.com',
     connectTimeout: const Duration(seconds: 10),
     sendTimeout: const Duration(seconds: 10),
@@ -30,7 +29,7 @@ Future<ServerResponse> sendBusStatus({
       },
       options: Options(
         headers: {
-          'Authorization': 'te quiero burrito',
+          'Authorization': 'burrito_prod_K8ZVf5g3XS6x2TcjdyDztkbvh4CQHrF7',
           'x-bus-id': 'burrito-001',
         },
       ),
