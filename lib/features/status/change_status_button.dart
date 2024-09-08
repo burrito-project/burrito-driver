@@ -83,7 +83,6 @@ class ChangeStatusButtonState extends State<ChangeStatusButton> {
         const SizedBox(width: 16),
         ElevatedButton(
           onPressed: () {
-            ScaffoldMessenger.of(context).clearSnackBars();
             widget.onStop();
           },
           style: ElevatedButton.styleFrom(

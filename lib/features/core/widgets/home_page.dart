@@ -95,6 +95,7 @@ class HomePageState extends State<HomePage> {
 
   void stopRequests() {
     responsesStream = const Stream.empty();
+    ScaffoldMessenger.of(context).clearSnackBars();
 
     setState(() {
       serviceStatus = BusServiceStatus.off;
@@ -142,6 +143,9 @@ class HomePageState extends State<HomePage> {
                     StreamBuilder(
                       stream: responsesStream,
                       builder: (context, snapshot) {
+                        if (!serviceStatus.isStarted) {
+                          return const SizedBox.shrink();
+                        }
                         if (!snapshot.hasData) {
                           return const SizedBox.shrink();
                         }
