@@ -74,10 +74,17 @@ class HomePageState extends State<HomePage> {
             ),
           );
         }
+
         return ServerResponse(ms: response.ms);
       } catch (e, st) {
-        // TODO: enviar logs al servidor
         debugPrint('Request error: $e $st');
+
+        try {
+          sendCrashReport(error: e.toString(), stackTrace: st);
+        } catch (e, st) {
+          debugPrint('Unable to send crash reports: $e $st');
+        }
+
         if (mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -94,6 +101,7 @@ class HomePageState extends State<HomePage> {
   }
 
   void stopRequests() {
+    responsesStream.drain();
     responsesStream = const Stream.empty();
     ScaffoldMessenger.of(context).clearSnackBars();
 
