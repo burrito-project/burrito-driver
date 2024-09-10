@@ -105,6 +105,16 @@ class HomePageState extends State<HomePage> {
     responsesStream = const Stream.empty();
     ScaffoldMessenger.of(context).clearSnackBars();
 
+    try {
+      Future.delayed(const Duration(seconds: 1), () {
+        sendBusStatus(
+          latitude: 0,
+          longitude: 0,
+          status: BusServiceStatus.off,
+        );
+      });
+    } catch (_) {}
+
     setState(() {
       serviceStatus = BusServiceStatus.off;
     });
