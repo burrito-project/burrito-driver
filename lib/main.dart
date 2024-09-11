@@ -21,7 +21,8 @@ class DriverApp extends StatelessWidget {
       ),
       home: const Scaffold(
         primary: true,
-        backgroundColor: Color(0xffc6d1e1),
+        // backgroundColor: Color(0xffc6d1e1),
+        backgroundColor: Color.fromARGB(255, 28, 28, 28),
         body: SafeArea(
           child: HomePage(),
         ),
