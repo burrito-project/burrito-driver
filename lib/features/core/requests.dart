@@ -1,3 +1,4 @@
+import 'package:battery_plus/battery_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:burrito_driver_app/features/status/data/entities/server_response.dart';
@@ -20,6 +21,11 @@ final dio = Dio(
   ),
 );
 
+var battery = Battery();
+int batteryLevel = 0;
+
+int batteryCount = 0;
+
 Future<ServerResponse> sendBusStatus({
   required double latitude,
   required double longitude,
@@ -27,11 +33,17 @@ Future<ServerResponse> sendBusStatus({
 }) async {
   try {
     final startTime = DateTime.now();
+    batteryCount++;
+
+    if (batteryLevel == 0 || batteryCount % 20 == 0) {
+      batteryLevel = await battery.batteryLevel;
+    }
 
     await dio.post('/driver', data: {
       'lt': latitude,
       'lg': longitude,
       'sts': status.asInt,
+      'bat': batteryLevel,
     });
 
     return ServerResponse(
