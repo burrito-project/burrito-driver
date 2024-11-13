@@ -62,7 +62,9 @@ class ChangeStatusButtonState extends State<ChangeStatusButton> {
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: const Color(0xFF262F31),
+              backgroundColor: _selectedStatus.locatable
+                  ? Colors.green
+                  : const Color(0xFF262F31),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -85,7 +87,9 @@ class ChangeStatusButtonState extends State<ChangeStatusButton> {
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: const Color(0xFF262F31),
+            backgroundColor: _selectedStatus.locatable
+                ? Colors.red
+                : const Color(0xFF262F31),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:burrito_driver_app/features/core/utils/battery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,9 +21,25 @@ class HomePageState extends State<HomePage> {
   BusServiceStatus serviceStatus = BusServiceStatus.off;
   Stream<ServerResponse?> responsesStream = const Stream.empty();
 
+  static Stream<Position>? positionStream;
+  static StreamSubscription<ServerResponse?>? positionStreamSubscription;
+
+  late Stream<int> batteryStream;
+
+  HomePageState() {
+    batteryStream = () async* {
+      while (true) {
+        yield await battery.batteryLevel;
+        await Future.delayed(const Duration(seconds: 10));
+      }
+    }();
+  }
+
   @override
   void dispose() {
     responsesStream.drain();
+    responsesStream = const Stream.empty();
+    positionStreamSubscription?.cancel();
     super.dispose();
   }
 
@@ -34,7 +51,7 @@ class HomePageState extends State<HomePage> {
       serviceStatus = BusServiceStatus.working;
     });
 
-    responsesStream = Geolocator.getPositionStream(
+    positionStream = Geolocator.getPositionStream(
       locationSettings: AndroidSettings(
         intervalDuration: const Duration(seconds: 1),
         accuracy: LocationAccuracy.high,
@@ -46,9 +63,9 @@ class HomePageState extends State<HomePage> {
           notificationChannelName: 'Tracking en segundo plano',
         ),
       ),
-    ).asyncMap<ServerResponse?>((pos) async {
-      if (serviceStatus.shoudlNotMakeRequests) return null;
+    );
 
+    responsesStream = positionStream!.asyncMap<ServerResponse?>((pos) async {
       if (kDebugMode) {
         print('\n');
         print(pos.altitude);
@@ -56,6 +73,7 @@ class HomePageState extends State<HomePage> {
         print(pos.longitude);
         print(pos.speed);
       }
+      if (serviceStatus.shoudlNotMakeRequests) return null;
 
       try {
         final response = await sendBusStatus(
@@ -65,18 +83,28 @@ class HomePageState extends State<HomePage> {
         );
 
         if (mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Solicitud enviada correctamente'),
+              content: Text('Posición actualizada'),
               backgroundColor: Colors.green,
               duration: Duration(milliseconds: 500),
             ),
           );
         }
+
         return ServerResponse(ms: response.ms);
       } catch (e, st) {
         debugPrint('Request error: $e $st');
+
+        try {
+          sendCrashReport(error: e.toString(), stackTrace: st);
+        } catch (e, st) {
+          debugPrint('Unable to send crash reports: $e $st');
+        }
+
         if (mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error en la solicitud: $e'),
@@ -88,10 +116,26 @@ class HomePageState extends State<HomePage> {
         rethrow;
       }
     });
+
+    positionStreamSubscription = responsesStream.listen((_) {});
   }
 
   void stopRequests() {
+    positionStreamSubscription?.cancel();
+    responsesStream.drain();
     responsesStream = const Stream.empty();
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    try {
+      Future.delayed(const Duration(seconds: 1), () {
+        sendBusStatus(
+          latitude: 0,
+          longitude: 0,
+          status: BusServiceStatus.off,
+        );
+      });
+    } catch (_) {}
 
     setState(() {
       serviceStatus = BusServiceStatus.off;
@@ -108,9 +152,9 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.asset(
-          'assets/img/burrito_stationary.png',
-        ),
+        // Image.asset(
+        //   'assets/img/burrito_stationary.png',
+        // ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,63 +176,115 @@ class HomePageState extends State<HomePage> {
                       'Burrito conductor',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         color: Colors.white,
                       ),
                     ),
-                    StreamBuilder(
-                      stream: responsesStream,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const SizedBox.shrink();
-                        }
-                        final response = snapshot.data as ServerResponse;
+                    // StreamBuilder(
+                    //   stream: responsesStream,
+                    //   builder: (context, snapshot) {
+                    //     if (!serviceStatus.isStarted) {
+                    //       return const SizedBox.shrink();
+                    //     }
+                    //     if (!snapshot.hasData) {
+                    //       return const SizedBox.shrink();
+                    //     }
+                    //     final response = snapshot.data as ServerResponse;
 
-                        return Text(
-                          'Tiempo transcurrido: ${response.ms} ms',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        );
-                      },
-                    ),
+                    //     return Text(
+                    //       'Tiempo transcurrido: ${response.ms} ms',
+                    //       style: const TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 16,
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     const SizedBox(height: 14),
                   ],
                 ),
               ),
             ),
-            const Expanded(child: SizedBox.expand()),
+            // Background
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StreamBuilder(
+                    stream: batteryStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              getBatteryIcon(snapshot.data),
+                              size: 54,
+                              color: Colors.grey,
+                            ),
+                            Text(
+                              '${snapshot.data}%',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'monospace',
+                                fontSize: 54,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  Text(
+                    serviceStatus.isOff ? 'Burrito apagado' : 'Burrito en ruta',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 32,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Footer
             Container(
               color: const Color.fromARGB(255, 16, 16, 16),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 32,
-                  horizontal: 16,
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 72,
-                  child: serviceStatus.isStarted
-                      ? ChangeStatusButton(
-                          onStop: stopRequests,
-                          currentStatus: serviceStatus,
-                          onStatusChanged: onStatusChanged,
-                        )
-                      : ElevatedButton(
-                          onPressed: startJourney,
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: const Color(0xFF262F31),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                padding: const EdgeInsets.only(top: 24, left: 16, right: 16),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 72,
+                      child: serviceStatus.isStarted
+                          ? ChangeStatusButton(
+                              onStop: stopRequests,
+                              currentStatus: serviceStatus,
+                              onStatusChanged: onStatusChanged,
+                            )
+                          : ElevatedButton(
+                              onPressed: startJourney,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 48, 62, 65),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Iniciar Recorrido',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Iniciar Recorrido',
-                            style: TextStyle(fontSize: 24),
-                          ),
-                        ),
+                    ),
+                    const SizedBox(height: 64),
+                  ],
                 ),
               ),
             ),

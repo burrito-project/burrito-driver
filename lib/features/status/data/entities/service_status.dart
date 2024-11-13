@@ -47,6 +47,10 @@ enum BusServiceStatus {
     return this == working || this == accident;
   }
 
+  bool get isOff {
+    return this == off;
+  }
+
   bool get isStarted {
     return this != unknown && this != loading && this != off;
   }

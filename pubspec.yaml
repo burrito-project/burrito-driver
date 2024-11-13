@@ -11,23 +11,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.3
   cupertino_icons: ^1.0.6
   dio: ^5.5.0+1
   geolocator: ^13.0.1
   geolocator_android: ^4.6.1
   permission_handler: ^11.3.1
+  battery_plus: ^6.0.3
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "assets/icons/app_icon.png"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  windows:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.10.0"
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.0
-
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/img/paradero.png"
 
 flutter:
   assets:
