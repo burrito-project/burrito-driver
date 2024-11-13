@@ -12,6 +12,11 @@ server without requiring the user to have the app open.
 The app periodically sends the bus's GPS coordinates to a server. This is done
 through an API endpoint, which the app hits in the background.
 
+## Sending the battery of the phone
+
+At the same time the app sends a coordinate to the server, it also sends the
+battery of the phone.
+
 ## Simple button to start or end the service
 
 The app includes a simple button that allows users to start or stop the
