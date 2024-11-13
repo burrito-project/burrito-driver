@@ -1,4 +1,7 @@
-# Burrito Driver Application
+# Bus Driver Application
 
-A flutter application to send the location of a university public transportation in real time.
+Status: Production ready
 
+A Flutter application that send the location, battery and status
+of the UNMSM bus transport in regular intervals to be consumed
+by application clients.
