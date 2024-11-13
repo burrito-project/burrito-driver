@@ -1,4 +1,4 @@
-# How this app works
+# How the driver application works
 
 ## Background location service
 
