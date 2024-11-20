@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD042 -->
 
-# Construcción de la aplicación del conductor de bus
+# Construcción de la aplicación del conductor del burrito
 
 Para información más detallada, consulta
 [la documentación oficial de Flutter](https://docs.flutter.dev/deployment/android#build-the-app-for-release).
