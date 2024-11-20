@@ -1,41 +1,41 @@
-# How the driver application works
+# Cómo funciona la aplicación del conductor
 
-## Background location service
+## Servicio de ubicación en segundo plano
 
-This app uses a background location service to continuously track the position
-of the bus, even when the app is in the background or when the screen is off.
-This service runs silently, ensuring that the bus-s location is sent to the
-server without requiring the user to have the app open.
+Esta aplicación utiliza un servicio de ubicación en segundo plano para realizar un seguimiento continuo de la posición
+del autobús, incluso cuando la aplicación está en segundo plano o cuando la pantalla está apagada.
+Este servicio se ejecuta de forma silenciosa, asegurando que la ubicación del autobús se envíe al
+servidor sin necesidad de que el usuario tenga la aplicación abierta.
 
-## Sending the location to the API
+## Enviar la ubicación a la API
 
-The app periodically sends the bus's GPS coordinates to a server. This is done
-through an API endpoint, which the app hits in the background.
+La aplicación envía periódicamente las coordenadas GPS del autobús a un servidor. Esto se hace
+a través de un endpoint de la API, que la aplicación consulta en segundo plano.
 
-## Sending the battery of the phone
+## Enviar la batería del teléfono
 
-At the same time the app sends a coordinate to the server, it also sends the
-battery of the phone.
+Al mismo tiempo que la aplicación envía una coordenada al servidor, también envía el
+estado de la batería del teléfono.
 
-## Simple button to start or end the service
+## Botón simple para iniciar o finalizar el servicio
 
-The app includes a simple button that allows users to start or stop the
-background location service. When the service is started, the app will begin
-sending location updates to the server. When stopped, the app will no longer
-track or send location data, effectively ending the location tracking for the
-bus.
+La aplicación incluye un botón simple que permite a los usuarios iniciar o detener el
+servicio de ubicación en segundo plano. Cuando el servicio está iniciado, la aplicación comenzará
+a enviar actualizaciones de ubicación al servidor. Cuando se detiene, la aplicación dejará de
+hacer un seguimiento o enviar datos de ubicación, lo que finaliza el seguimiento de ubicación para el
+autobús.
 
-## Change the state of the burrito
+## Cambiar el estado del burrito
 
-The app allows changing the state of the bus, referred to as the "burrito,"
-between different operational statuses. These statuses represent the current
-condition of the bus:
+La aplicación permite cambiar el estado del autobús, denominado "burrito,"
+entre diferentes estados operacionales. Estos estados representan la condición actual
+del autobús:
 
-- **En ruta ("In route"):** The bus is on its way to its destination.
-- **Fuera de servicio ("Out of service"):** The bus is not operational or
-unavailable.
-- **En descanso ("At rest"):** The bus is temporarily stopped or idle.
-- **Accidente ("Accident"):** The bus has been involved in an accident.
-- **Error ("Error"):** There is an issue with the bus or its location data.
-- **Cargando ("Loading"):** The bus is being loaded or is in preparation.
-- **Desconocido ("Unknown"):** The bus status is not known.
+- **En ruta ("In route"):** El autobús está en camino a su destino.
+- **Fuera de servicio ("Out of service"):** El autobús no está operativo o no está disponible.
+- **En descanso ("At rest"):** El autobús está temporalmente detenido o inactivo.
+- **Accidente ("Accident"):** El autobús ha estado involucrado en un accidente.
+- **Error ("Error"):** Hay un problema con el autobús o con los datos de su ubicación.
+- **Cargando ("Loading"):** El autobús está siendo cargado o está en preparación.
+- **Desconocido ("Unknown"):** El estado del autobús no es conocido.
+
