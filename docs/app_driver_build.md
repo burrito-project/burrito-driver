@@ -1,36 +1,35 @@
 <!-- markdownlint-disable MD033 MD042 -->
 
-# Building the bus driver app
+# Construcción de la aplicación del conductor de bus
 
-For more in-depth information refer to
-[the official Flutter build docs](https://docs.flutter.dev/deployment/android#build-the-app-for-release).
+Para información más detallada, consulta
+[la documentación oficial de Flutter](https://docs.flutter.dev/deployment/android#build-the-app-for-release).
 
 <div class="warning">
-Note that this documentation is only for Android. Altough Flutter fully
-supports iOS, we have not tested it yet with this project.
+Ten en cuenta que esta documentación es solo para Android. Aunque Flutter soporta completamente iOS, aún no se ha probado con este proyecto.
 
-There is a working workflow called ios-compilation.yml in the .github/workflows
-directory that you can check.
+Hay un flujo de trabajo funcional llamado ios-compilation.yml en el directorio .github/workflows
+que puedes consultar.
 </div>
 
-## Building the APK
+## Construcción del APK
 
-To build APKs for multiple architectures (e.g., ARM, ARM64, x86), use the following command. This will generate separate APK files for each ABI (Application Binary Interface), allowing users to download the appropriate APK for their device's architecture:
+Para construir APKs para múltiples arquitecturas (por ejemplo, ARM, ARM64, x86), utiliza el siguiente comando. Esto generará archivos APK separados para cada ABI (Interfaz Binaria de Aplicación), permitiendo a los usuarios descargar el APK adecuado para la arquitectura de su dispositivo:
 
 ```json
 flutter build apk --split-per-abi
 ```
 
-The APKs will be saved under the `build/app/outputs/flutter-apk/` directory. You can find the generated APKs in that folder, ready for testing or distribution.
+Los APKs se guardarán en el directorio `build/app/outputs/flutter-apk/`. Puedes encontrar los APKs generados en esa carpeta, listos para pruebas o distribución.
 
-## Build an App Bundle for Release
+## Construir un paquete de la aplicación para la liberación
 
-In addition to building APKs, it's also a good practice to generate an App Bundle (.aab) for releasing the app to the Google Play Store. The App Bundle contains everything needed for distribution, and Google Play will optimize the app for different device configurations automatically.
+Además de construir los APKs, también es una buena práctica generar un Paquete de la Aplicación (.aab) para liberar la aplicación en la Google Play Store. El Paquete de la Aplicación contiene todo lo necesario para la distribución, y Google Play optimizará automáticamente la aplicación para diferentes configuraciones de dispositivos.
 
-To build a release version of the App Bundle, use the following command:
+Para construir una versión de liberación del Paquete de la Aplicación, utiliza el siguiente comando:
 
 ```json
 flutter build appbundle --release
 ```
 
-Once the build is completed, the .aab file will be available in the `build/app/outputs/bundle/release/` directory. You can upload this file to the Google Play Console or any other app store that supports App Bundles.
+Una vez que la construcción esté completa, el archivo .aab estará disponible en el directorio `build/app/outputs/bundle/release/`. Puedes subir este archivo a la Google Play Console o cualquier otra tienda de aplicaciones que soporte Paquetes de Aplicación.
