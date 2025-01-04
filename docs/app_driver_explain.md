@@ -38,3 +38,4 @@ del autobús:
 - **Error ("Error"):** Hay un problema con el autobús o con los datos de su ubicación.
 - **Cargando ("Loading"):** El autobús está siendo cargado o está en preparación.
 - **Desconocido ("Unknown"):** El estado del autobús no es conocido.
+

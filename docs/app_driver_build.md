@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD042 -->
 
-# Compilación  de la aplicación del conductor del burrito
+# Construcción de la aplicación del conductor del burrito
 
 Para información más detallada, consulta
 [la documentación oficial de Flutter](https://docs.flutter.dev/deployment/android#build-the-app-for-release).
@@ -12,7 +12,7 @@ Hay un flujo de trabajo funcional llamado ios-compilation.yml en el directorio .
 que puedes consultar.
 </div>
 
-## Compilación  del APK
+## Construcción del APK
 
 Para construir APKs para múltiples arquitecturas (por ejemplo, ARM, ARM64, x86), utiliza el siguiente comando. Esto generará archivos APK separados para cada ABI (Interfaz Binaria de Aplicación), permitiendo a los usuarios descargar el APK adecuado para la arquitectura de su dispositivo:
 
