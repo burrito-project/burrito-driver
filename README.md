@@ -1,15 +1,15 @@
 # Bus Driver Application
 
-Estado: Listo para producción
+Status: Production ready
 
-Una aplicación Flutter que envía la ubicación, el nivel de batería y el estado 
-del transporte en autobús de la UNMSM a intervalos regulares para ser consumidos 
-por los clientes de la aplicación.
+A Flutter application that send the location, battery and status
+of the UNMSM bus transport in regular intervals to be consumed
+by application clients.
 
-La aplicación del conductor es responsable de recopilar información del dispositivo, 
-la ubicación y el estado del servicio informado por el conductor, todo en intervalos 
-regulares para ser consumido por las aplicaciones clientes.
+The driver application is responsible for collection device information,
+location and the service status reported by the driver. All in regular
+intervals to be consumed by application clients.
 
-La aplicación debe ser simple y consumir la menor cantidad de batería posible.
+The app should be simple and consume the least battery possible.
 
-Escrita con React y Vite.
+Written with React and Vite.
