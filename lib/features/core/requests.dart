@@ -8,7 +8,7 @@ const kBurritoName = 'burrito-001';
 
 final dio = Dio(
   BaseOptions(
-    baseUrl: 'https://api.contigosanmarcos.com',
+    baseUrl: 'https://api.burritosanmarcos.com',
     // baseUrl: 'http://192.168.1.92:6969',
     connectTimeout: const Duration(seconds: 10),
     sendTimeout: const Duration(seconds: 10),
