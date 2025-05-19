@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pe.edu.unmsm.my_android_maps_app">
+    package="pe.edu.unmsm.burrito_driver">
     <application
         android:label="Burrito Driver"
         android:icon="@mipmap/launcher_icon">
