@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:burrito_driver_app/features/core/utils/battery.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:burrito_driver_app/features/core/requests.dart';
 import 'package:burrito_driver_app/features/core/utils/permissions.dart';
@@ -54,12 +54,15 @@ class HomePageState extends State<HomePage> {
     positionStream = Geolocator.getPositionStream(
       locationSettings: AndroidSettings(
         intervalDuration: const Duration(seconds: 1),
-        accuracy: LocationAccuracy.high,
+        accuracy: LocationAccuracy.best,
         foregroundNotificationConfig: const ForegroundNotificationConfig(
           notificationText: 'Enviando ubicación actual de la ruta del burrito',
           notificationTitle: 'Burrito funcionando',
           enableWakeLock: true,
-          notificationIcon: AndroidResource(name: 'mipmap/ic_launcher'),
+          notificationIcon: AndroidResource(
+            name: 'ic_notification',
+            defType: 'drawable',
+          ),
           notificationChannelName: 'Tracking en segundo plano',
         ),
       ),

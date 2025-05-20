@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/opt/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/opt/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/paolo/Dev/burrito/driver/android/app/.cxx/RelWithDebInfo/9q44706i/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/opt/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/paolo/Dev/burrito/driver/android/app/.cxx/RelWithDebInfo/9q44706i/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

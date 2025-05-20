@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.6
   dio: ^5.5.0+1
-  geolocator: ^13.0.1
-  geolocator_android: ^4.6.1
+  geolocator: ^13.0.4
+  geolocator_android: 4.6.1
   permission_handler: ^11.3.1
   battery_plus: ^6.0.3
 
